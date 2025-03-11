@@ -1,6 +1,8 @@
 import Button from "../../components/button";
 import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
+
 
 import { useEffect, useState } from "react";
 import TopBackgroundDiv from "../../components/topBackground";
@@ -11,6 +13,7 @@ import {
   ContainerUsers,
   Title2,
   TrashIcon,
+  ErrorMessage
 } from "./styles";
 import Trash from "../../assets/trash.svg";
 
@@ -35,6 +38,9 @@ function ListUsers() {
     const updatedUsers = users.filter(user => user.id !== id)
 
     setUsers(updatedUsers)
+    setTimeout(() => {
+      toast.success("User was deleted!");
+    }, 5);
   }
 
   return (
@@ -42,8 +48,11 @@ function ListUsers() {
       <TopBackgroundDiv />
       <Title2>List of Users</Title2>
 
-      <ContainerUsers>
-        {users.map((user) => (
+      <ContainerUsers className={users.length === 0 ? "empty" : ""}>
+        { users.length === 0 ? (
+          <ErrorMessage>There is no User registered</ErrorMessage>
+        ) : ( 
+        users.map((user) => (
           <CardUsers key={user.id}>
             <AvatarUser
               src={`https://avatar.iran.liara.run/public?username=${user.id}`}
@@ -55,8 +64,10 @@ function ListUsers() {
             </div>
             <TrashIcon src={Trash} alt="trash-icon" onClick={() => deleteUsers(user.id)} />
           </CardUsers>
-        ))}
+        ))
+      )}
       </ContainerUsers>
+      <ToastContainer autoClose={2000}/>
       <Button type="button" onClick={() => navigate("/")}>
         Go back
       </Button>

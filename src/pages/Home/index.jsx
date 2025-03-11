@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { useNavigate } from 'react-router-dom'; // to swing between pages
 import api from "../../services/api";
+import { toast, ToastContainer } from 'react-toastify';
+
 
 import {
   Title,
@@ -25,12 +27,30 @@ function Home() {
 
   async function registerNewUser() {
     try { 
+      const name = inputName.current.value;
+      const age = inputAge.current.value;
+      const ageValue = parseInt(age, 10);
 
+
+          // Validate if name is empty
+    if (!name) {
+      toast.warn("Please enter your name." , );
+      return;
+    }
+
+    // Validate if age is empty or not a number
+    if (!age || isNaN(age) || parseInt(age) <= 0) {
+      toast.warn("Please enter a valid age.");
+      return;
+    } else if ( ageValue < 16){
+      toast.warn("You must be older than 16");
+      return;
+    }
       // Validate the email format
     const email = inputEmail.current.value;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
     if (!emailPattern.test(email)) {
-      setMessage("Please enter a valid email address.");
+      toast.warn("Please enter a valid email address.");
       return;
        }
     await api.post("/users", {
@@ -42,10 +62,14 @@ function Home() {
     inputAge.current.value = "";
     inputEmail.current.value = "";
 
+    toast.success("User registered successfully!");
     setMessage("User registered successfully!");
+    setTimeout(() => {
+      navigate('/users-list')
+    }, 2000);
   } catch {
-    console.error("Error registering user:", error);
-    setMessage("Failed to register user. Please try again.");
+    console.error("Error registering user:");
+    toast.error("Failed to register user. Please try again.");
   }
   }
 
@@ -78,6 +102,7 @@ function Home() {
         </div>
 
         <Message>{message}</Message>
+        <ToastContainer autoClose={2000}/>
 
         <Button type="button" onClick={registerNewUser} theme="primary-button">
           Sign in

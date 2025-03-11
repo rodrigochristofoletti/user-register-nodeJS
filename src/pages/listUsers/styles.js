@@ -28,6 +28,14 @@ export const ContainerUsers = styled.div`
   @media (max-width: 750px) {
     grid-template-columns: 1fr;
   }
+
+  &.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-weight: 600;
+  }
 `;
 
 export const CardUsers = styled.div`
@@ -72,4 +80,9 @@ export const TrashIcon = styled.img`
 
 export const AvatarUser = styled.img`
   height: 80px;
+`;
+
+export const ErrorMessage = styled.p`
+  color:rgb(236, 31, 17);
+  font-size: 22px;
 `;
